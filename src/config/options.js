@@ -4,7 +4,7 @@ export const options = {
         carts:"carts.json"
 
     },
-    mongoDB:{
+    mongo:{
         url:"mongodb+srv://alexcpc1:15255993@cluster0.k9idfw8.mongodb.net/ecommerce?retryWrites=true&w=majority"
     }
 };

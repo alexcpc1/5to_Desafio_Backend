@@ -1,19 +1,18 @@
 import {Router} from "express";
-// import { ProductManagerFile } from "../daos/managers/productManagerFile.js";
-import {ProductManagerMongo} from "../daos/managers/productManagerMongo.js";
+// import { ProductsFiles } from "../daos/managers/products.files.js";
+import { ProductsMongo } from "../daos/managers/products.mongo.js";
 //importamos el modelo de productos
-import {ProductModel} from "../daos/models/product.model.js";
+import { ProductsModel } from "../daos/models/product.model.js";
 
 //services
-// const productManager = new ProductManagerFile('products.json');
-const productManager = new ProductManagerMongo(ProductModel);
+const productsService = new ProductsMongo(ProductsModel);
 
 const router = Router();
 
 router.get("/:pid",async(req,res)=>{
     try {
         const {pid} = req.params;
-        const product = await productManager.getProductById(pid);
+        const product = await productsService.getProductById(pid);
         // console.log("product: ", product);
         res.status(200).json({status:"success", result:product});
     } catch (error) {
@@ -26,7 +25,7 @@ router.delete("/:pid",async(req,res)=>{
     try {
         const productId = req.params.pid;
         //luego eliminamos el producto
-        const productdeleted = await productManager.deleteProduct(productId);
+        const productdeleted = await productsService.deleteProduct(productId);
         res.json({status:"success", result:productdeleted.message});
     } catch (error) {
         res.status(400).json({message:error});
