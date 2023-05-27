@@ -1,36 +1,38 @@
 const socketClient = io(); //instancia del socket del lado del cliente
 
-const chatbox = document.getElementById('chatbox');
-const emailBox = document.getElementById('emailBox');
+const chatEmail = document.getElementById('chatEmail');
+const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendButton');
 const msgContainer = document.getElementById('msgContainer');
 
-const sendMessage = ()=>{
-    socketClient.emit('message', {user:emailBox.value, message:chatbox.value});
-    chatbox.value='';
-};
+sendBtn.addEventListener("click", ()=>{
 
-chatbox.addEventListener('keydown',(e)=>{
-    if(e.key === 'Enter'){
-        sendMessage();
-    }
-});
+    const validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
 
-sendBtn.addEventListener('click',(e)=>{
-    sendMessage();
+	if( !validEmail.test(chatEmail.value) ){
+		alert(`${chatEmail.value} no cumple con el formato de correo electrónico`);
+	}else{
+
+    socketClient.emit("message", {
+        user: chatEmail.value,
+        message: chatInput.value
+    });
+    chatInput.value = "";
+}
 });
 
 //recibimos los mensajes del server.
 socketClient.on("msgHistory",(data)=>{
-    // console.log("data", data);
-    //vaciamos el contenido de div
+    console.log(data);
+    //se vacia el contenido de div
     msgContainer.innerHTML='';
     data.forEach(element => {
-        //creamos un párrafo con para mensaje
+        //se crea un párrafo para mensaje
         const parrafo = document.createElement('p');
-        //le agregamos el mensaje al párrafo
+        //se agrega el mensaje al párrafo
+        // parrafo.innerHTML=`${JSON.stringify(element)}`;
         parrafo.innerHTML=`user: ${element.user} - message: ${element.message}`;
-        //vamos agregando al div cada párrafo que creamos
+        //se agrega al div cada párrafo que se crea
         msgContainer.appendChild(parrafo);
     });
 });

@@ -4,14 +4,14 @@ class ChatMongo{
     constructor(model){
         this.model = ChatModel;
     }
-//  revisar cambiar object por message
+
     async addMessage(object){
         try {
             const data = await this.model.create(object);
             const response = JSON.parse(JSON.stringify(data));
             return response;
         } catch (error) {
-            throw new Error(`Hubo un error al guardar el mensaje`);
+            throw new Error(`Hubo un error al guardar el mensaje ${error.message}`);
         }
     };
 
@@ -21,7 +21,7 @@ class ChatMongo{
             const response = JSON.parse(JSON.stringify(data));
             return response;
         } catch (error) {
-            throw new Error(`Hubo un error al guardar el mensaje`);
+            throw new Error(`Hubo un error al guardar el mensaje ${error.message}`);
         }
     };
 }

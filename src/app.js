@@ -41,8 +41,7 @@ app.use(viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 
-////configuración socket servidor
-// const messages=[];
+//configuración socket servidor
 socketServer.on("connection",async(socketConnected)=>{
     console.log(`Nuevo cliente conectado ${socketConnected.id}`);
     const messages = await chatService.getMessages();
