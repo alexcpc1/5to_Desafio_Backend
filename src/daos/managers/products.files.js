@@ -129,5 +129,4 @@ class ProductsFiles{
         }
     };
 }
-
 export {ProductsFiles};

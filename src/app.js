@@ -6,6 +6,7 @@ import path from "path";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
+import { realtimeRouter } from "./routes/realtime.routes.js";
 import { connectDB } from "./config/dbConnection.js";
 import {Server} from "socket.io";
 import { ChatMongo } from "./daos/managers/chat.mongo.js";
@@ -40,8 +41,9 @@ connectDB();
 app.use(viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/realtimeproducts", realtimeRouter);
 
-//configuración socket servidor
+// configuración socket servidor
 socketServer.on("connection",async(socketConnected)=>{
     console.log(`Nuevo cliente conectado ${socketConnected.id}`);
     const messages = await chatService.getMessages();

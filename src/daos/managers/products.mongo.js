@@ -5,16 +5,6 @@ class ProductsMongo{
         this.model = ProductsModel;
     }
 
-    async addProduct(product){
-        try {
-            const data = await this.model.create(product);
-            const response = JSON.parse(JSON.stringify(data));
-            return response;
-        } catch (error) {
-            throw new Error(`Error al guardar: ${error}`);
-        }
-    };
-
     async getProducts(){
         try {
             const data = await this.model.find();
@@ -27,38 +17,42 @@ class ProductsMongo{
 
     async getProductById(id){
         try {
-            //Comprobación de la estructura y validez del Id de producto recibido por parámetro
-            if (id.trim().length != 24) {
-                throw new Error("El Id de producto ingresado no es válido");
-            }
             const data = await this.model.findById(id);
-            if(data){
-                // console.log("data", data)
-                const response = JSON.parse(JSON.stringify(data));
-                return response;
+            if(!data){
+                throw new Error("el producto no existe")
             }
-            throw new Error(`No se encontró el producto`);
+            return data;
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error(`Error al obtener producto ${error.message}`);
+        }
+    };
+    async createProduct(product){
+        try {
+            const data = await this.model.create(product);
+            return data;
+        } catch (error) {
+            throw new Error(`Error al crear el producto ${error.message}`);
         }
     };
 
-    async updateProduct(id, product){
+    async updateProduct(id,product){
         try {
-            const data = await this.model.findByIdAndUpdate(id, product,{new:true});
-            const response = JSON.parse(JSON.stringify(data));
-            return response;
+            const data = await this.model.findByIdAndUpdate(id,product,{new:true});
+            if(!data){
+                throw new Error("el producto no existe")
+            }
+            return data;
         } catch (error) {
-            throw new Error(`Error al actualizar: no se encontró el id ${id}`);
+            throw new Error(`Error al actualizar el producto ${error.message}`);
         }
-    }
+    };
 
     async deleteProduct(id){
         try {
             await this.model.findByIdAndDelete(id);
-            return {message:"producto eliminado"};
+            return {message: "producto eliminado"};
         } catch (error) {
-            throw new Error(`Error al borrar: no se encontró el id ${id}`);
+            throw new Error(`Error al eliminar el producto ${error.message}`);
         }
     };
 }

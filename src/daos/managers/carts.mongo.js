@@ -89,7 +89,5 @@ class CartsMongo{
             throw new Error(error.message)
         }
     };
-
 }
-
 export {CartsMongo}

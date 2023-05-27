@@ -1,7 +1,7 @@
 import {Router} from "express";
 // import { ProductsFiles } from "../daos/managers/products.files.js";
 import { ProductsMongo } from "../daos/managers/products.mongo.js";
-//importamos el modelo de productos
+// se importa el modelo de productos
 import { ProductsModel } from "../daos/models/product.model.js";
 
 //services

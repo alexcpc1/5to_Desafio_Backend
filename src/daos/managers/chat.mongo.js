@@ -11,7 +11,7 @@ class ChatMongo{
             const response = JSON.parse(JSON.stringify(data));
             return response;
         } catch (error) {
-            throw new Error(`Hubo un error al guardar el mensaje ${error.message}`);
+            throw new Error(`Hubo un error al guardar el mensaje`);
         }
     };
 
@@ -21,9 +21,8 @@ class ChatMongo{
             const response = JSON.parse(JSON.stringify(data));
             return response;
         } catch (error) {
-            throw new Error(`Hubo un error al guardar el mensaje ${error.message}`);
+            throw new Error(`Hubo un error al guardar el mensaje`);
         }
     };
 }
-
 export {ChatMongo};
