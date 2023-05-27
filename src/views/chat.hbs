@@ -1,12 +1,12 @@
 <h1>Pagina del chat</h1>
 <div>
-    <input id="chatbox" placeholder="type a messaje"/>
+    <input id="emailBox" type="email" placeholder="Ingresa tu correo"/>
+     <br/><br/>
+    <input id="chatbox" placeholder="Ingresa tu mensaje"/>
     <br/><br/>
-    <input id="emailBox" type="email" placeholder="Type email"/>
+    <button id="sendButton">Enviar mensaje</button>
     <br/><br/>
-    <button id="sendButton">Enviar</button>
-    <br/><br/>
-    <div id="historial"></div>
+    <div id="msgContainer"></div>
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/chat.js"></script>

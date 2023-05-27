@@ -6,8 +6,7 @@ import path from "path";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
-// import { connectDB } from "./config/dbConnection.js";
-import "./config/dbConnection.js";
+import { connectDB } from "./config/dbConnection.js";
 import {Server} from "socket.io";
 import { ChatMongo } from "./daos/managers/chat.mongo.js";
 import { ChatModel} from "./daos/models/chat.model.js";
@@ -33,6 +32,9 @@ httpServer.on('error', error => console.log(`Error in server ${error}`));
 app.engine(".hbs",handlebars.engine({extname: '.hbs'}));
 app.set('views',path.join(__dirname, "/views"));
 app.set("view engine", ".hbs");
+
+//conexion a la base de datos
+connectDB();
 
 //routes
 app.use(viewsRouter);
