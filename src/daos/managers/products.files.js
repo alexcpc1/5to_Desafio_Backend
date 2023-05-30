@@ -25,12 +25,12 @@ class ProductsFiles{
     async addProduct(product){
         try {
             if(this.fileExist()){
-                //obtenemos los productos
+                //Se obtenen los productos
                 const products = await this.getProducts();
                 const newId = this.getNewId(products);
                 product.id = newId;
                 products.push(product);
-                //reescribimos el archivo
+                //Se reescribe el archivo
                 await fs.promises.writeFile(this.path,JSON.stringify(products,null,2));
                 // console.log("Producto agregado");
                 return product;
@@ -41,7 +41,6 @@ class ProductsFiles{
                 return product;
             }
         } catch (error) {
-            // console.log(error);
             throw new Error(error);
         }
     };
@@ -58,7 +57,6 @@ class ProductsFiles{
                 return [];
             }
         } catch (error) {
-            // console.log(error);
             throw new Error(error);
         }
     };
@@ -77,7 +75,6 @@ class ProductsFiles{
                 throw new Error("El archivo no existe");
             }
         } catch (error) {
-            // console.log(error);
             throw new Error(error);
         }
     };
@@ -104,7 +101,6 @@ class ProductsFiles{
                 throw new Error("El archivo no existe");
             }
         } catch (error) {
-            // console.log(error)
             throw new Error(error);
         }
     }

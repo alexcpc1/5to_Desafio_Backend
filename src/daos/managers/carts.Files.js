@@ -117,8 +117,8 @@ class CartFiles{
             throw new Error(error);
         }
     };
-    async deleteProduct(cartId, productId){};
-    async updateCart(cartId, cart){};
+    // async deleteProduct(cartId, productId){};
+    // async updateCart(cartId, cart){};
 }
 
 export {CartFiles}

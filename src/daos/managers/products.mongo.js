@@ -55,6 +55,15 @@ class ProductsMongo{
             throw new Error(`Error al eliminar el producto ${error.message}`);
         }
     };
+
+    async getPaginate(query={},options={}){
+        try {
+            const result = await this.model.paginate(query, options);
+            return result;
+        } catch (error) {
+            throw new Error(`Error get all products ${error.message}`);
+        }
+    };
 }
 
 export {ProductsMongo};
