@@ -61,7 +61,7 @@ class ProductsMongo{
             const result = await this.model.paginate(query, options);
             return result;
         } catch (error) {
-            throw new Error(`Error get all products ${error.message}`);
+            throw new Error(`Error al obtener productos ${error.message}`);
         }
     };
 }

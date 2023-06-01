@@ -72,6 +72,8 @@ router.get("/:pid",async(req,res)=>{
     try {
         const {pid} = req.params;
         const product = await productsService.getProductById(pid);
+        const {title, description, code, price, status, stock, category} = req.body;
+        if (!title || !description || !code || !price || !status || !stock || !category )
         // console.log("product: ", product);
         res.status(200).json({status:"success", result:product});
     } catch (error) {

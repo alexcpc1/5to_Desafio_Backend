@@ -93,3 +93,14 @@ export const ProductsModel = mongoose.model(productCollection,productSchema);
 // "status": true,
 // "category": "Tecnología"
 // }
+
+// {
+// "title": "Botines de fútbol",
+// "description": "Botines de fútbol con suela especial de tracción en terrenos de césped",
+// "price": 10000,
+// "thumbnail": "https://example.com/botines.jpg",
+// "code": "343",
+// "stock": 2,
+// "status": true,
+// "category": "Deportes"
+// }
