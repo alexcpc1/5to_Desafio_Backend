@@ -17,7 +17,9 @@ class CartsMongo{
 
     async addCart(){
         try {
-            const cart={};
+            const cart={
+                products: []
+            };
             const data = await this.model.create(cart);
             const response = JSON.parse(JSON.stringify(data));
             return response;
@@ -65,9 +67,9 @@ class CartsMongo{
     async deleteProduct(cartId,productId){
         try {
             const cart = await this.getCartById(cartId);
-            const productIndex = cart.products.findIndex(prod=>prod.id==productId);
+            const productIndex = cart.products.findIndex(prod=>prod.id._id==productId);
             if(productIndex>=0){
-                const newProducts = cart.products.filter(prod=>prod.id!=productId);
+                const newProducts = cart.products.filter(prod=>prod.id._id!=productId);
                 cart.products = [...newProducts];
                 const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
                 return data;
@@ -82,8 +84,11 @@ class CartsMongo{
 
     async updateCart(id, cart){
         try {
-            await this.model.findByIdAndUpdate(id,cart);
-            return "Carrito actualizado";
+            const cartUpdated = await this.model.findByIdAndUpdate(id,cart);
+            if(cartUpdated){
+                return "Carrito actualizado";
+            }
+            throw new Error(`El carrito no existe`);
         } catch (error) {
             throw new Error(error.message)
         }
@@ -92,7 +97,7 @@ class CartsMongo{
     async updateQuantityInCart(cartId, productId,quantity){
         try {
             const cart = await this.getCartById(cartId);
-            const productIndex = cart.products.findIndex(prod=>prod.id==productId);
+            const productIndex = cart.products.findIndex(prod=>prod.id._id==productId);
             if(productIndex>=0){
                 cart.products[productIndex].quantity = quantity;
             } else {
