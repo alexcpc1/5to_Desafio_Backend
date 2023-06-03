@@ -12,9 +12,12 @@ const router = Router();
 router.get("/", async(req,res)=>{
     try {
         const {limit=10,page=1,sort,category,stock} = req.query;
+        if(sort) {
         if(!["asc","desc"].includes(sort)){
             res.json({status:"error", message:"ordenamiento no valido, solo puede ser asc o desc"})
+            }
         };
+
         const sortValue = sort === "asc" ? 1 : -1;
         const stockValue = stock === 0 ? undefined : parseInt(stock);
         // console.log("limit: ", limit, "page: ", page, "sortValue: ", sortValue, "category: ", category, "stock: ", stock);
