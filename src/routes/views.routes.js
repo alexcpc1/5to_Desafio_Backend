@@ -83,7 +83,7 @@ router.get("/cart/:cid",async(req,res)=>{
         const cartId = req.params.cid;
         const cart = await cartsService.getCartById(cartId);
         // console.log("cart:", cart)
-        res.render("cartDetail",cart);
+        res.render("cartInfo",cart);
     } catch (error) {
         // console.log(error.message);
         res.send(`<div>Hubo un error al cargar esta vista</div>`);

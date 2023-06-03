@@ -21,10 +21,10 @@ class CartsMongo{
                 products: []
             };
             const data = await this.model.create(cart);
-            const response = JSON.parse(JSON.stringify(data));
-            return response;
+            // const response = JSON.parse(JSON.stringify(data));
+            return data;
         } catch (error) {
-            throw new Error(`Error al guardar: ${error.message}`);
+            throw new Error(`Error al crear el carrito: ${error.message}`);
         }
     };
 
@@ -32,13 +32,13 @@ class CartsMongo{
         try {
            
             
-            const data = await this.model.find({_id:id});
+            const data = await this.model.findById({id});
             // console.log("data: ", data);
-            if(data){
-                const response = JSON.parse(JSON.stringify(data));
-                return response[0];
-            }
-            throw new Error(`No se encontró el carrito con el id ${id}`);
+            if(!data){
+                // const response = JSON.parse(JSON.stringify(data));
+                throw new Error(`El Carrito con ID: ${id} no existe ${error.message}`);
+                }
+            return data;
         } catch (error) {
             throw new Error(error.message);
         }
@@ -47,13 +47,13 @@ class CartsMongo{
     async addProductToCart(cartId,productId){
         try {
             const cart = await this.getCartById(cartId);
-            const productIndex = cart.products.findIndex(prod=>prod.id==productId);
+            const productIndex = cart.products.findIndex(prod=>prod.id===productId);
             if(productIndex>=0){
                 cart.products[productIndex].quantity = cart.products[productIndex].quantity+1;
             } else {
                 cart.products.push({
-                    _id:productId,
-                    quantity:1
+                    _id: productId,
+                    quantity: 1
                 });
             };
             const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
