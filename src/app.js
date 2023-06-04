@@ -11,6 +11,10 @@ import { connectDB } from "./config/dbConnection.js";
 import {Server} from "socket.io";
 import { ChatMongo } from "./daos/managers/chat.mongo.js";
 import { ChatModel} from "./daos/models/chat.model.js";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+// import passport from "passport";
+// import { initializePassport } from "./config/passport.config.js";
 
 //service
 const chatService = new ChatMongo(ChatModel);
@@ -29,6 +33,21 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 httpServer.on('error', error => console.log(`Error in server ${error}`));
 
+// configuracion session
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl:options.mongo.url
+    }),
+    secret:"claveSecreta",
+    resave:false,
+    saveUninitialized:false
+}));
+
+//configuracion de passport
+// initializePassport();
+// app.use(passport.initialize());
+// app.use(passport.session());
+
 //configuracion motor de plantillas
 app.engine(".hbs",handlebars.engine({extname: '.hbs'}));
 app.set('views',path.join(__dirname, "/views"));
@@ -42,6 +61,7 @@ app.use(viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/realtimeproducts", realtimeRouter);
+// app.use("/api/sessions", authRouter);
 
 // configuración socket servidor
 socketServer.on("connection",async(socketConnected)=>{

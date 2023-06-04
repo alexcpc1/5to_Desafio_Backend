@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { CartModel } from "../models/cart.model.js";
+// import { response } from "express";
 
 class CartsMongo{
     constructor(model){
@@ -9,8 +10,8 @@ class CartsMongo{
     async getCarts(){
         try {
             const data = await this.model.find();
-            const response = JSON.parse(JSON.stringify(data));
-            return response;
+            // const response = JSON.parse(JSON.stringify(data));
+            return data;
         } catch (error) {
             throw new Error(error.message);
         }
@@ -33,7 +34,7 @@ class CartsMongo{
         try {
            
             
-            const data = await this.model.findById({id});
+            const data = await this.model.findById(id);
             // console.log("data: ", data);
             if(!data){
                 // const response = JSON.parse(JSON.stringify(data));
@@ -57,16 +58,6 @@ class CartsMongo{
                     quantity: 1
                 });
             };
-            // await this.model.findOneAndUpdate(
-            //     { _id: cartId },
-            //     { $push: { products: { _id: productId, quantity: 1 } } }
-            //     );
-            //     }
-            // await this.model.findOneAndUpdate(
-            //     { _id: cartId , ‘products._id’: productId},
-            //     { $inc: { ‘products.$.quantity’: 1 } },
-            //     { new: true }
-            //     );
             const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
             const response = JSON.parse(JSON.stringify(data));
             return response;
@@ -78,7 +69,7 @@ class CartsMongo{
     async deleteProduct(cartId,productId){
         try {
             const cart = await this.getCartById(cartId);
-            const productIndex = cart.products.findIndex(prod=>prod.id._id==productId);
+            const productIndex = cart.products.findIndex(prod=>prod.id._id===productId);
             if(productIndex>=0){
                 const newProducts = cart.products.filter(prod=>prod.id._id!=productId);
                 cart.products = [...newProducts];
