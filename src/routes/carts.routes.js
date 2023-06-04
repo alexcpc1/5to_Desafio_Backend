@@ -30,9 +30,13 @@ router.get("/:cid",async(req,res)=>{
         const cartId = req.params.cid;
         //obtenemos el carrito
         const cart = await cartsService.getCartById(cartId);
-        res.json({status:"success", result:cart});
+        if (cart) {
+            res.json({status:"success", result:cart});
+        } else {
+            res.status(400).json({status: "error", message: "Este carrito no existe"})
+        }
     } catch (error) {
-        res.status(400).json({status:"error", error:error.message});
+        res.status(400).json({status:"error", message:error.message});
     }
 });
 
@@ -98,10 +102,10 @@ router.delete("/:cid/product/:pid",async(req,res)=>{
         // console.log("cart: ", cart);
         if (cart) {
             const product = await productsService.getProductById(productId);
-        // // console.log("product: ", product);
+        // console.log("product: ", product);
             if (product) {
                 const response = await cartsService.deleteProduct(cartId, productId);
-                res.json({status:"success", result:response, message:"product deleted"});
+                res.json({status:"success", result:response, message:"Producto eliminado"});
             } else {
                 res.status(400).json({status: "error", message: "No se puede eliminar este producto"});
             }
@@ -113,4 +117,15 @@ router.delete("/:cid/product/:pid",async(req,res)=>{
     }
 });
 
+router.delete("/:cid",async(req,res)=>{
+    try {
+        const cartId = req.params.cid;
+        const cart = await cartsService.getCartById(cartId);
+        cart.products=[];
+        const response = await cartsService.updateCart(cartId, cart);
+        res.json({status:"success", result: response, message:"Carrito eliminado"});
+    } catch (error) {
+        res.status(400).json({status:"error", error:error.message});
+    }
+});
 export {router as cartsRouter};

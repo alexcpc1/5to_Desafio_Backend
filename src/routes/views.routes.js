@@ -78,7 +78,7 @@ router.get("/products/:pid",async(req,res)=>{
     }
 });
 
-router.get("/carts/:cid",async(req,res)=>{
+router.get("/cart/:cid",async(req,res)=>{
     try {
         const cartId = req.params.cid;
         const cart = await cartsService.getCartById(cartId);
