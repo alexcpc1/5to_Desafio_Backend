@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import { CartModel } from "../models/cart.model.js";
 
 class CartsMongo{
     constructor(model){
-        this.model = model;
+        this.model = CartModel;
     }
 
     async getCarts(){
@@ -56,6 +57,16 @@ class CartsMongo{
                     quantity: 1
                 });
             };
+            // await this.model.findOneAndUpdate(
+            //     { _id: cartId },
+            //     { $push: { products: { _id: productId, quantity: 1 } } }
+            //     );
+            //     }
+            // await this.model.findOneAndUpdate(
+            //     { _id: cartId , ‘products._id’: productId},
+            //     { $inc: { ‘products.$.quantity’: 1 } },
+            //     { new: true }
+            //     );
             const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
             const response = JSON.parse(JSON.stringify(data));
             return response;
