@@ -16,7 +16,7 @@ const cartsService = new CartsMongo(CartModel);
 
 //rutas de las vistas
 router.get("/", (req,res)=>{
-    res.render("home");
+    res.render("home", {products: products});
 });
 
 router.get("/login", (req,res)=>{
@@ -97,7 +97,7 @@ router.get("/products/:pid",async(req,res)=>{
         const productId = req.params.pid;
         const product = await productsService.getProductById(productId);
         // console.log("product: ", product);
-        res.render("productDetail",product);
+        res.render("productInfo", product);
     } catch (error) {
         // console.log(error.message);
         res.send(`<div>Hubo un error al cargar esta vista</div>`);
@@ -115,5 +115,17 @@ router.get("/cart/:cid",async(req,res)=>{
         res.send(`<div>Hubo un error al cargar esta vista</div>`);
     }
 });
+
+// //ruta para obtener Cart e informacion de products
+// app.get("/cart/:cid", async(req,res)=>{
+//     try {
+//         const cartId = req.params.cid;
+//         //populate("nombre_de_la_propiedad_a_popular")
+//         const cart = await CartModel.findById(cartId).populate('products');
+//         res.render(cart);
+//     } catch (error) {
+//         res.send(error.message)
+//     }
+// });
 
 export {router as viewsRouter}

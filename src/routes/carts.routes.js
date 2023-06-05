@@ -18,7 +18,8 @@ const router = Router();
 router.post("/",async(req,res)=>{
     try {
         const cartAdded = await cartsService.addCart();
-        res.json({status:"success", result:cartAdded, message:"cart added"});
+        res.json({status:"success", result:cartAdded, message:"Carrito Agregado"});
+        console.log(cartAdded);
     } catch (error) {
         res.status(400).json({status:"error", error:error.message});
     }
@@ -41,7 +42,7 @@ router.get("/:cid",async(req,res)=>{
 });
 
 //ruta para agregar un producto al carrito
-router.post("/:cid/product/:pid",async(req,res)=>{
+router.put("/:cid/product/:pid",async(req,res)=>{
     try {
         const cartId = req.params.cid;
         const productId = req.params.pid;
@@ -72,7 +73,7 @@ router.put("/:cid",async(req,res)=>{
         const cart = await cartsService.getCartById(cartId);
         cart.products = [...products];
         const response = await cartsService.updateCart(cartId, cart);
-        res.json({status:"success", result:response, message:"cart updated"});
+        res.json({status:"success", result:response, message:"Carrito actualizado"});
     } catch (error) {
         res.status(400).json({status:"error", error:error.message});
     }
@@ -128,4 +129,5 @@ router.delete("/:cid",async(req,res)=>{
         res.status(400).json({status:"error", error:error.message});
     }
 });
+
 export {router as cartsRouter};

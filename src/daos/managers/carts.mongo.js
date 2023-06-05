@@ -10,7 +10,7 @@ class CartsMongo{
     async getCarts(){
         try {
             const data = await this.model.find();
-            // const response = JSON.parse(JSON.stringify(data));
+            const response = JSON.parse(JSON.stringify(data));
             return data;
         } catch (error) {
             throw new Error(error.message);
@@ -49,7 +49,7 @@ class CartsMongo{
     async addProductToCart(cartId,productId){
         try {
             const cart = await this.getCartById(cartId);
-            const productIndex = cart.products.findIndex(prod=>prod.id===productId);
+            const productIndex = cart.products.findIndex(prod=>prod.id==productId);
             if(productIndex>=0){
                 cart.products[productIndex].quantity = cart.products[productIndex].quantity+1;
             } else {
@@ -59,8 +59,10 @@ class CartsMongo{
                 });
             };
             const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
-            const response = JSON.parse(JSON.stringify(data));
-            return response;
+            const dataPopule = await this.model.findById({_id:cartId}).populate("products");
+            // return data;
+            // const response = JSON.parse(JSON.stringify(data));
+            return dataPopule;
         } catch (error) {
             throw new Error(error.message);
         }
