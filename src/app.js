@@ -7,6 +7,7 @@ import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { realtimeRouter } from "./routes/realtime.routes.js";
+import { authRouter } from "./routes/auth.routes.js";
 import { connectDB } from "./config/dbConnection.js";
 import {Server} from "socket.io";
 import { ChatMongo } from "./daos/managers/chat.mongo.js";
@@ -61,7 +62,7 @@ app.use(viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/realtimeproducts", realtimeRouter);
-// app.use("/api/sessions", authRouter);
+app.use("/api/sessions", authRouter);
 
 // configuración socket servidor
 socketServer.on("connection",async(socketConnected)=>{

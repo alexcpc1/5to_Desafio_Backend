@@ -1,10 +1,18 @@
 import mongoose from "mongoose";
 
-const userCollection = "users";
+const usersCollection = "users";
 
-const userSchema = new mongoose.Schema({
-    name: {
+const usersSchema = new mongoose.Schema({
+    fisrt_name: {
         type:String,
+        required:true
+    },
+    last_name: {
+        type:String,
+        required:true
+    },
+    age: {
+        type:Number,
         required:true
     },
     email: {
@@ -12,12 +20,16 @@ const userSchema = new mongoose.Schema({
         unique:true,
         required:true
     },
-    rol: {
-        type: String,
-        required:true,
-        enum:["usuario","admin"],
-        default: 'usuario',
+    password: {
+        type:String,
+        required:true
     }
+    // rol: {
+    //     type: String,
+    //     required:true,
+    //     enum:["usuario","admin"],
+    //     default: 'usuario',
+    // }
 });
 
-export const UserModel = mongoose.model(userCollection, userSchema);
+export const UserModel = mongoose.model(usersCollection, usersSchema);
