@@ -40,8 +40,8 @@ app.use(session({
         mongoUrl:options.mongo.url
     }),
     secret:"claveSecreta",
-    resave:false,
-    saveUninitialized:false
+    resave:true,
+    saveUninitialized:true
 }));
 
 //configuracion de passport
@@ -60,7 +60,7 @@ connectDB();
 //routes
 app.use(viewsRouter);
 app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
+app.use("/api/cart", cartsRouter);
 app.use("/realtimeproducts", realtimeRouter);
 app.use("/api/sessions", authRouter);
 

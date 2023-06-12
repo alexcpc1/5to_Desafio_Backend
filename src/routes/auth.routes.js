@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { UserModel } from "../daos/models/user.model.js";
+import { userModel } from "../daos/models/user.model.js";
 
 const router = Router();
 
@@ -7,51 +7,76 @@ const router = Router();
 router.post("/signup", async(req,res)=>{
     try {
         const userForm = req.body;
-        //buscamos el usuario en la base de datos por el correo
-        const user = await UserModel.findOne({email:userForm.email});
-        if(!user){
-            //si no existe el usuario, registramos el usuario
-            const userCreated = await UserModel.create(userForm);
-            res.send('<div>usuario registrado, <a href="/login">ir al login</a></div>');
-        } else {
-            res.send('<div>usuario ya registrado, <a href="/signup">intente de nuevo</a></div>');
-        }
+        const validEmail =  /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+
+	if( !validEmail.test(userForm.email) ){
+		alert(`${userForm.email} no cumple con el formato de correo electrónico`);
+    }else{
+        const user = await userModel.findOne({email:userForm.email});
+
+        if (!user) {
+
+            if (userForm.email.endsWith("@coder.com") && userForm.password.startsWith("adminCod3r")) {
+                userForm.role = "admin";
+                userForm.password = createHash(userForm.password);
+                const userCreated = await userModel.create(userForm);
+                console.log(userCreated);
+                res.send(`<div> usuario registrado exitosamente, <a href= "/login">Ir al login</a></div>`);
+            }else{
+                userForm.password = createHash(userForm.password);
+                const userCreated = await userModel.create(userForm);
+
+            console.log(userCreated);
+
+            res.send(`<div> usuario registrado exitosamente, <a href= "/login">Ir al login</a></div>`);
+                }
+        }else{
+            res.send(`<div> usuario ya registrado anteriormente, <a href= "/register">Ir a Registrarse</a></div>`);
+        }}
     } catch (error) {
-        res.send('<div>Hubo un error al registrar el usuario, <a href="/signup">intente de nuevo</a></div>')
+        res.send(`<div> error al registrarse, <a href= "/register">intente de nuevo</a></div>`);
     }
 });
 
-// //ruta para loguear el usuario
-// router.post("/login", async(req,res)=>{
-//     try {
-//         const userLoginForm = req.body;
-//         //buscamos el usuario en la base de datos por el correo
-//         const userDB = await UserModel.findOne({email:userLoginForm.email});
-//         if(userDB){
-//             //si existe el usuario, verificamos la contraseña del usuario
-//             if(userDB.password === userLoginForm.password){
-//                 //una validamos credenciales, creamos la sesion del usuario
-//                 req.session.user={first_name:userDB.first_name, last_name:userDB.last_name, email:userDB.email};
-//                 res.redirect("/profile");
-//             } else {
-//                 res.send('<div>credenciales invalidas, <a href="/login">intente de nuevo</ahref=></div>');
-//             }
-//         } else {
-//             //si no esta registrado
-//             res.send('<div>usuario no registrado, <a href="/signup">registrarse</a> o <a href="/login">intente de nuevo</ahref=></div>');
-//         }
-//     } catch (error) {
-//         res.send('<div>Hubo un error al loguear el usuario, <a href="/login">intente de nuevo</a></div>')
-//     }
-// });
+//ruta para loguear el usuario
+router.post("/login", async(req,res)=>{
+    try {
+        const userLoginForm = req.body;
+        const userDB = await userModel.findOne({email: userLoginForm.email});
+
+        if (userDB) {
+            
+                if (isValidPassword(userLoginForm.password, userDB)) {
+                    req.session.user = {first_name: userDB.first_name, last_name: userDB.last_name, age: userDB.age, email: userDB.email, role: userDB.role};
+                    res.redirect("/products");
+                } else {
+                    res.send(`<div> contraseña incorrecta <a href= "/register">Ir a Registrarse</a> o <a href= "/login">Intente de nuevo</a></div>`);
+                }
+
+        } else {
+            res.send(`<div> usuario no registrado, <a href= "/register">Ir a Registrarse</a> o <a href= "/login">Intente de nuevo</a></div>`);
+        }
+
+    } catch (error) {
+        res.send(`<div> error al iniciar sesión, <a href= "/login">intente de nuevo</a></div>`);
+    }
+});
 
 
-// //ruta cerrar sesion
-// router.get("/logout",(req,res)=>{
-//     req.session.destroy(err=>{
-//         if(err) return res.send('no se pudo cerrar sesion, <a href="/profile">ir al perfil</a>');
-//         res.redirect("/")
-//     });
-// });
+//ruta cerrar sesion
+router.get("/logout",(req,res)=>{
+    req.logOut(error=>{
+
+        if (error) {
+            return res.send(`No se pudo cerrar sesión  <a href= "/products">Ir al perfil</a>`);
+        } else {
+            req.session.destroy(error=>{
+                if (error) {
+                    return res.send(`No se pudo cerrar sesión  <a href= "/products">Ir al perfil</a>`)};
+                    res.redirect("/");
+            });
+        }
+    })   
+});
 
 export { router as authRouter};

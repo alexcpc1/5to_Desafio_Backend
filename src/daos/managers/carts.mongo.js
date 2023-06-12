@@ -1,29 +1,31 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 import { CartModel } from "../models/cart.model.js";
 // import { response } from "express";
 
 class CartsMongo{
     constructor(model){
         this.model = CartModel;
-    }
-
-    async getCarts(){
-        try {
-            const data = await this.model.find();
-            const response = JSON.parse(JSON.stringify(data));
-            return data;
-        } catch (error) {
-            throw new Error(error.message);
-        }
     };
 
+    // corregido y funciono
+    async getCarts(cartId){
+        try {
+            const result = await this.model.findOne({_id:cartId});
+            if(!result){
+                throw new Error(`No se encontro el carrito ${error.message}`);
+            }
+            //convertir el formato bson a json
+            const data = JSON.parse(JSON.stringify(result));
+            return data;
+        } catch (error) {
+            throw new Error(`El Carrito con ID: ${_id} no existe ${error.message}`);
+        }
+    };
+   
     async addCart(){
         try {
-            const cart={
-                products: []
-            };
+            const cart={};
             const data = await this.model.create(cart);
-            // const response = JSON.parse(JSON.stringify(data));
             return data;
         } catch (error) {
             throw new Error(`Error al crear el carrito: ${error.message}`);
@@ -34,13 +36,13 @@ class CartsMongo{
         try {
            
             
-            const data = await this.model.findById(id);
+            const data = await this.model.findById({_id:id});
             // console.log("data: ", data);
-            if(!data){
-                // const response = JSON.parse(JSON.stringify(data));
-                throw new Error(`El Carrito con ID: ${id} no existe ${error.message}`);
+            if(data){
+                const response = JSON.parse(JSON.stringify(data));
+                return response[0];
                 }
-            return data;
+                throw new Error(`El Carrito con ID: ${id} no existe ${error.message}`);
         } catch (error) {
             throw new Error(error.message);
         }
@@ -48,21 +50,18 @@ class CartsMongo{
 
     async addProductToCart(cartId,productId){
         try {
-            const cart = await this.getCartById(cartId);
-            const productIndex = cart.products.findIndex(prod=>prod.id==productId);
+            const cart = await this.getCarts(cartId);
+            const productIndex = cart.products.findIndex(prod=>prod._id === productId);
             if(productIndex>=0){
                 cart.products[productIndex].quantity = cart.products[productIndex].quantity+1;
             } else {
                 cart.products.push({
-                    _id: productId,
+                    productId: productId,
                     quantity: 1
                 });
             };
             const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
-            const dataPopule = await this.model.findById({_id:cartId}).populate("products");
-            // return data;
-            // const response = JSON.parse(JSON.stringify(data));
-            return dataPopule;
+            return data;
         } catch (error) {
             throw new Error(error.message);
         }
@@ -70,10 +69,10 @@ class CartsMongo{
 
     async deleteProduct(cartId,productId){
         try {
-            const cart = await this.getCartById(cartId);
-            const productIndex = cart.products.findIndex(prod=>prod.id._id===productId);
+            const cart = await this.getCarts(cartId);
+            const productIndex = cart.products.findIndex(prod=>prod.id===productId);
             if(productIndex>=0){
-                const newProducts = cart.products.filter(prod=>prod.id._id!=productId);
+                const newProducts = cart.products.filter(prod=>prod.id!=productId);
                 cart.products = [...newProducts];
                 const data = await this.model.findByIdAndUpdate(cartId, cart,{new:true});
                 return data;
@@ -83,7 +82,6 @@ class CartsMongo{
         } catch (error) {
             throw new Error(`Error al eliminar el producto: ${error.message}`);
         }
-        
     };
 
     async updateCart(id, cart){
@@ -100,8 +98,8 @@ class CartsMongo{
 
     async updateQuantityInCart(cartId, productId,quantity){
         try {
-            const cart = await this.getCartById(cartId);
-            const productIndex = cart.products.findIndex(prod=>prod.id._id==productId);
+            const cart = await this.getCarts(cartId);
+            const productIndex = cart.products.findIndex(prod=>prod.id===productId);
             if(productIndex>=0){
                 cart.products[productIndex].quantity = quantity;
             } else {

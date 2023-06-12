@@ -9,11 +9,6 @@ const router = Router();
 const productsService = new ProductsMongo(ProductsModel);
 const cartsService = new CartsMongo(CartModel);
 
-/* <a href="/">Inicio</a>
-<a href="/login">Login</a>
-<a href="/signup">Registro</a>
-<a href="/profile">Perfil</a> */
-
 //rutas de las vistas
 router.get("/", (req,res)=>{
     res.render("home");
@@ -34,9 +29,6 @@ router.get("/profile", (req,res)=>{
 
 router.get("/",(req,res)=>{
     return res.render("chat");
-});
-router.get("/",(req,res)=>{
-    return res.render("cartInfo");
 });
 
 router.get("/products",async(req,res)=>{
@@ -92,36 +84,44 @@ router.get("/products",async(req,res)=>{
     res.render("products");
 });
 
-router.get("/products/:pid",async(req,res)=>{
+router.get("/cart",async(req,res)=>{
     try {
-        const productId = req.params.pid;
-        const product = await productsService.getProductById(productId);
-        // console.log("product: ", product);
-        res.render("productInfo", product);
+        return res.render("cart");
     } catch (error) {
         // console.log(error.message);
         res.send(`<div>Hubo un error al cargar esta vista</div>`);
     }
 });
-
 router.get("/cart/:cid",async(req,res)=>{
     try {
         const cartId = req.params.cid;
         const cart = await cartsService.getCartById(cartId);
-        // console.log("cart:", cart)
-        res.render("cartInfo",cart);
+        console.log(cart)
+        res.render("cart");
     } catch (error) {
         // console.log(error.message);
         res.send(`<div>Hubo un error al cargar esta vista</div>`);
     }
 });
-
-// //ruta para obtener Cart e informacion de products
-// app.get("/cart/:cid", async(req,res)=>{
+// nuevo 
+router.get("/cart/:cid",async(req,res)=>{
+    try {
+        const cartId = req.params.cid;
+        // const cart = await  cartsService.getCartById(cartId);
+        const cart = await cartsService.getCarts(cartId);
+        console.log(cart)
+        res.render("cart");
+    } catch (error) {
+        // console.log(error.message);
+        res.send(`<div>Hubo un error al cargar esta vista</div>`);
+    }
+});
+// // ruta para obtener Cart e informacion de products
+// router.get("/cart/:cid", async(req,res)=>{
 //     try {
 //         const cartId = req.params.cid;
 //         //populate("nombre_de_la_propiedad_a_popular")
-//         const cart = await CartModel.findById(cartId).populate('products');
+//         const cart = await CartModel.findById(cartId.productId);
 //         res.render(cart);
 //     } catch (error) {
 //         res.send(error.message)

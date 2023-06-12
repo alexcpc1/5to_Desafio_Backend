@@ -23,13 +23,13 @@ const usersSchema = new mongoose.Schema({
     password: {
         type:String,
         required:true
+    },
+    role: {
+        type: String,
+        required:true,
+        enum:["usuario","admin"],
+        default: 'usuario',
     }
-    // rol: {
-    //     type: String,
-    //     required:true,
-    //     enum:["usuario","admin"],
-    //     default: 'usuario',
-    // }
 });
 
-export const UserModel = mongoose.model(usersCollection, usersSchema);
+export const userModel = mongoose.model(usersCollection, usersSchema);
