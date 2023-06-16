@@ -14,8 +14,8 @@ import { ChatMongo } from "./daos/managers/chat.mongo.js";
 import { ChatModel} from "./daos/models/chat.model.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-// import passport from "passport";
-// import { initializePassport } from "./config/passport.config.js";
+import passport from "passport";
+import { initializePassport } from "./config/passport.config.js";
 
 //service
 const chatService = new ChatMongo(ChatModel);
@@ -44,10 +44,10 @@ app.use(session({
     saveUninitialized:true
 }));
 
-//configuracion de passport
-// initializePassport();
-// app.use(passport.initialize());
-// app.use(passport.session());
+// configuracion de passport
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 //configuracion motor de plantillas
 app.engine(".hbs",handlebars.engine({extname: '.hbs'}));
